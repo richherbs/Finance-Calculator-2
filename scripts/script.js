@@ -18,15 +18,15 @@
 let inputs = document.querySelectorAll("input");
 let calculate = document.querySelector(".calculate");
 let calculationContainer = document.querySelector(".calculation-container");
-const NUMBERSONLY = /^[0-9]$/;
+const NUMBERSONLY = /^[0-9]+$/;
 
 inputs.forEach(element => {
     element.addEventListener('keyup', (e) => {
-        console.log(activeElement.backgroundColour);
-        if(checkNumbers(activeElement.value)){
-            activeElement.backgroundColour = "transparent";
+        let activeElement = e.target;
+        if(NUMBERSONLY.test(activeElement.value)){
+            activeElement.style.backgroundColor = "transparent";
         } else {
-            activeElement.backgroundColour = "red";
+            activeElement.style.backgroundColor = "red";
         }
     }) 
 });
@@ -34,7 +34,7 @@ inputs.forEach(element => {
 calculate.addEventListener('click', (e) => {
     e.preventDefault();
     
-    if(checkExists(inputs)){
+    if(checkExists(inputs) && checkNumbers(inputs)){
         let borrow = parseInt(inputs[0].value);
         let repayment = parseInt(inputs[2].value)
 
@@ -42,9 +42,11 @@ calculate.addEventListener('click', (e) => {
         let totalToPay = borrow + adminFee;
         let repaymentTerm = calculateRepaymentTerm(totalToPay, repayment);
 
-        displayInfo(adminFee, "You will pay an administration fee of: ");
-        displayInfo(repaymentTerm, "You will be paying it back for: ");
-        displayInfo(totalToPay, "You will be paying a total of: ");
+        displayInfo(`You will pay an administration fee of: £${adminFee}`, calculationContainer);
+        displayInfo(`You will be paying it back for: ${repaymentTerm} months`, calculationContainer);
+        displayInfo(`You will be paying a total of: £${totalToPay}`, calculationContainer);
+    } else {
+        displayInfo("Please check the information you provided in the form", calculationContainer);
     }
 })
 
@@ -69,15 +71,20 @@ function calculateRepaymentTerm(aTotalToPay, aRepayment){
     return Math.round(repaymentTerm);
 }
 
-function displayInfo(aNumber, aMessage, aContainer) {
-    adminFeeNode = document.createElement("P");
-    adminFeeTextNode = document.createTextNode(aMessage + aNumber);
-    adminFeeNode.appendChild(adminFeeTextNode);
-    aContainer.appendChild(adminFeeNode);
+function displayInfo(aMessage, aContainer) {
+    node = document.createElement("P");
+    textNode = document.createTextNode(aMessage);
+    node.appendChild(textNode);
+    aContainer.appendChild(node);
 }
 
-function checkNumbers(aString) {
-    return NUMBERSONLY.test(aString);
+function checkNumbers(anArrayOfInputs) {
+    anArrayOfInputs.forEach(element => {
+        if(NUMBERSONLY.test(element.value)){
+            return false;
+        }
+    });
+    return true;
 }
 
 function checkExists(anArrayOfInputs) {

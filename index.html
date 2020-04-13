@@ -6,19 +6,23 @@
     <title>Finance Calculator 2!!!</title>
     <script src="scripts/script.js" defer></script>
     <link rel="stylesheet" href="styles/styles.css">
+    <link rel="stylesheet" href="styles/normalize.css">
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Paaji+2&display=swap" rel="stylesheet">
 </head>
 <body>
-    <h1>Finance Calculator 2!!!</h1>
-    <form>
-        <label for="loan"></label>
+    <div class="container">
+        <h1>Finance Calculator 2!!!</h1>
+    </div>
+    <form class="container">
+        <label for="loan">Please enter the amount you want to borrow up to £8000</label>
         <input type="text" class="borrow" name="borrow">
-        <label for="salary"></label>
+        <label for="salary">How much do you earn annually?</label>
         <input type="text" class="salary" name="salary" value="25000">
-        <label for="repayment"></label>
-        <input type="text" class="repayment" name="repayment" value="10%">
-        <button class="calculate">Calculate</button>
+        <label for="repayment">What percentage of the loan would you like to pay back each month?</label>
+        <input type="text" class="repayment" name="repayment" value="10">
+        <input type="button" class="calculate" value="Calculate">
     </form>
-    <div class="calculation-container">
+    <div class="calculation-container container">
 
     </div>
 </body>
