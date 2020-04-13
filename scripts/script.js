@@ -16,28 +16,36 @@
 // Display 5% of total borrowed amount as upfront admin fee
 
 let inputs = document.querySelectorAll("input");
-let calculate = document.querySelector("calculate");
+let calculate = document.querySelector(".calculate");
 let calculationContainer = document.querySelector(".calculation-container");
+const NUMBERSONLY = /^[0-9]$/;
 
-calculate.addEventListener('click', () => {
-    let adminFee = calculateAdminFee(inputs[0]);
-    let totalToPay = inputs[0] + adminFee;
-    let repaymentTerm = calculateRepaymentTerm(totalToPay, inputs[2]);
+inputs.forEach(element => {
+    element.addEventListener('keyup', (e) => {
+        console.log(activeElement.backgroundColour);
+        if(checkNumbers(activeElement.value)){
+            activeElement.backgroundColour = "transparent";
+        } else {
+            activeElement.backgroundColour = "red";
+        }
+    }) 
+});
 
-    adminFeeNode = document.createElement("P");
-    adminFeeTextNode = document.createTextNode(adminFee);
-    adminFeeNode.appendChild(adminFeeTextNode);
-    calculationContainer.appendChild(adminFeeNode);
+calculate.addEventListener('click', (e) => {
+    e.preventDefault();
+    
+    if(checkExists(inputs)){
+        let borrow = parseInt(inputs[0].value);
+        let repayment = parseInt(inputs[2].value)
 
-    adminFeeNode = document.createElement("P");
-    adminFeeTextNode = document.createTextNode(repaymentTerm);
-    adminFeeNode.appendChild(adminFeeTextNode);
-    calculationContainer.appendChild(adminFeeNode);
+        let adminFee = calculateAdminFee(borrow);
+        let totalToPay = borrow + adminFee;
+        let repaymentTerm = calculateRepaymentTerm(totalToPay, repayment);
 
-    adminFeeNode = document.createElement("P");
-    adminFeeTextNode = document.createTextNode(totalToPay);
-    adminFeeNode.appendChild(adminFeeTextNode);
-    calculationContainer.appendChild(adminFeeNode);
+        displayInfo(adminFee, "You will pay an administration fee of: ");
+        displayInfo(repaymentTerm, "You will be paying it back for: ");
+        displayInfo(totalToPay, "You will be paying a total of: ");
+    }
 })
 
 function calculateAdminFee(aLoan) {
@@ -59,4 +67,24 @@ function calculateRepaymentTerm(aTotalToPay, aRepayment){
     let repaymentTerm = aTotalToPay / repaymentPounds;
 
     return Math.round(repaymentTerm);
+}
+
+function displayInfo(aNumber, aMessage, aContainer) {
+    adminFeeNode = document.createElement("P");
+    adminFeeTextNode = document.createTextNode(aMessage + aNumber);
+    adminFeeNode.appendChild(adminFeeTextNode);
+    aContainer.appendChild(adminFeeNode);
+}
+
+function checkNumbers(aString) {
+    return NUMBERSONLY.test(aString);
+}
+
+function checkExists(anArrayOfInputs) {
+    anArrayOfInputs.forEach(element => {
+        if(!element.value.length > 0){
+            return false;
+        }
+    });
+    return true;
 }
